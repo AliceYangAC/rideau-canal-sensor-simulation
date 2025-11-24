@@ -14,12 +14,3 @@
    - Example output
 8. **Troubleshooting**
    - Common issues and fixes
-9. **Screenshots**
-   1. IoT Hub with 3 registered devices
-   2. IoT Hub metrics showing messages received
-   3. Stream Analytics query editor with your query
-   4. Stream Analytics job in "Running" state
-   5. Cosmos DB Data Explorer with sample documents
-   6. Blob Storage container with archived files
-
-Note: Dashboard screenshots are in the dashboard README.
