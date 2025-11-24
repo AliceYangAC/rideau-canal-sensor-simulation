@@ -8,14 +8,11 @@ from dotenv import load_dotenv
 BASE_DIR = os.path.dirname(__file__)
 load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
 
-# Ice Thickness (cm)
-# Surface Temperature (°C)
-# Snow Accumulation (cm)
-# External Temperature (°C)
+DOWS_LAKE_CONN_STR = os.getenv("DOWS_LAKE_CONN_STR")
+FIFTH_AVE_CONN_STR = os.getenv("FIFTH_AVE_CONN_STR")
+NAC_CONN_STR = os.getenv("NAC_CONN_STR")
 
-CONNECTION_STRING = os.getenv("CONNECTION_STRING")
-
-locations =["Dow's Lake", "Fifth Avenue", "NAC"]
+locations ={"Dow's Lake": DOWS_LAKE_CONN_STR, "Fifth Avenue": FIFTH_AVE_CONN_STR, "NAC": NAC_CONN_STR}
 
 def get_telemetry(location):
     return {
@@ -34,11 +31,11 @@ def get_telemetry(location):
 # Data Format: JSON with timestamp
 
 def main():
-    client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
-
+    
     print("Sending telemetry of 3 devices to IoT Hub...")
     try:
-        for location in locations:
+        for location in locations.keys():
+            client = IoTHubDeviceClient.create_from_connection_string(locations[location])
             telemetry = get_telemetry(location)
             message = Message(str(telemetry))
             client.send_message(message)
