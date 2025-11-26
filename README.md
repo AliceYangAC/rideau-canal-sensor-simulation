@@ -26,7 +26,7 @@ The simulator connects to **Azure IoT Hub** using device-specific (`dows_lake`, 
 
 ### Installation
 
-Clone the Repos and Install Dependencies
+Clone the repos and install dependencies.
 
 ```bash
 git clone https://github.com/aliceyangac/rideau-canal-dashboard.git
@@ -271,3 +271,65 @@ NAC_CONN_STR=your_nac_device_connection_string
     }
 }
 ```
+
+## Troubleshooting
+
+### 1. The simulator won’t start locally.
+- **Cause:** Missing dependencies or virtual environment not activated.  
+- **Fix:**  
+  ```bash
+  source venv/bin/activate   # or venv\Scripts\activate on Windows
+  pip install -r requirements.txt
+  python sensor_simulation.py
+  ```
+
+### 2. Connection errors when sending telemetry to IoT Hub.
+- **Cause:** Invalid or missing IoT Hub device connection strings in `.env`.  
+- **Fix:**  
+  - Ensure `.env` file exists in the project root.  
+  - Verify values for:  
+    ```env
+    DOWS_LAKE_CONN_STR=your_dows_lake_device_connection_string
+    FIFTH_AVE_CONN_STR=your_fifth_ave_device_connection_string
+    NAC_CONN_STR=your_nac_device_connection_string
+    ```  
+  - Confirm devices are registered in IoT Hub with matching names.
+
+### 3. No data flowing into Stream Analytics.
+- **Cause:** Stream Analytics job not started or input not bound to IoT Hub.  
+- **Fix:**  
+  - In Stream Analytics **Job topology ->  Inputs**, confirm IoT Hub is configured.  
+  - Start the job from the top menu blade.  
+  - Check logs for dropped events.
+
+### 4. Cosmos DB container remains empty.
+- **Cause:** Output not configured or partition key mismatch.  
+- **Fix:**  
+  - In Stream Analytics **Job topology ->  Outputs**, confirm Cosmos DB container is `SensorAggregations`.  
+  - Partition key must be `/location`.  
+  - Verify query includes `c.location` and `id`.
+
+### 5. Blob Storage container has no files.
+- **Cause:** Output path or format misconfigured.  
+- **Fix:**  
+  - In Stream Analytics **Job topology ->  Outputs**, confirm Storage Accounts container is `historical-data`.  
+  - Path pattern should be:  
+    ```
+    aggregations/{date}/{time}
+    ```  
+  - Format must be **JSON (line separated)**.
+
+### 6. Simulator stops unexpectedly after a few seconds.
+- **Cause:** KeyboardInterrupt or unhandled exception.  
+- **Fix:**  
+  - If intentional, restart with:  
+    ```bash
+    python sensor_simulation.py
+    ```  
+  - If unintentional, check logs for stack traces (e.g., invalid env vars, network errors). 
+
+### 7. IoT Hub shows messages but downstream services don’t update.
+- **Cause:** Latency or aggregation window delay.  
+- **Fix:**  
+  - Stream Analytics uses a **5‑minute tumbling window**. 
+  - Confirm job is running and not paused.
