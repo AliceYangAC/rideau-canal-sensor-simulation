@@ -19,9 +19,9 @@ locations ={"Dow's Lake": DOWS_LAKE_CONN_STR, "Fifth Avenue": FIFTH_AVE_CONN_STR
 # Function to generate random telemetry data
 def get_telemetry(location):
     return {
-        "ice_thickness": random.uniform(1.0, 70.0),
-        "surface_temperature": random.uniform(-20.0, 0.0),
-        "snow_accumulation": random.uniform(0.0, 45.0),
+        "ice_thickness": random.uniform(1.0, 58.0),
+        "surface_temperature": random.uniform(-15.0, 5.0),
+        "snow_accumulation": random.uniform(0.0, 30.0),
         "external_temperature": random.uniform(-20.0, 5.0),
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
         "location": location
