@@ -229,8 +229,6 @@ NAC_CONN_STR=your_nac_device_connection_string
   - Enters an infinite loop, sending telemetry messages every 10 seconds.  
   - Handles graceful shutdown on `Ctrl+C` (KeyboardInterrupt) by disconnecting all clients.
 
----
-
 ### Key Functions
 
 - **`get_telemetry(location)`**  
